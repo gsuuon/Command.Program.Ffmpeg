@@ -88,4 +88,4 @@ module Preset =
 let ffmpeg (options: FfmpegOption list) output =
     let args = options |> List.map toArg |> String.concat " "
 
-    proc "ffmpeg" (args + output)
+    proc "ffmpeg" (args + " " + output)
