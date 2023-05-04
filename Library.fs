@@ -1,5 +1,6 @@
-﻿module Command.Program.Ffmpeg
+﻿module Gsuuon.Command.Program.Ffmpeg
 
+open System
 open System.Drawing
 open Gsuuon.Command
 open Gsuuon.Console.Log
@@ -30,10 +31,11 @@ type Gdigrab = {
 type FfmpegOption =
     | Dshow of Dshow
     | Gdigrab of Gdigrab
+    | RawArg of string
 
 let dshowOptionToArg =
     function
-    | Audio name -> $"""-f dshow -i audio='{name}'"""
+    | Audio name -> $"-f dshow -i audio=\"{name}\""
 
 let gdigrabOptionToArg  gdigrab =
     match gdigrab.frame with
@@ -50,6 +52,7 @@ let toArg =
     function
     | Dshow dshow -> dshowOptionToArg dshow
     | Gdigrab gdigrab -> gdigrabOptionToArg gdigrab
+    | RawArg s -> s
 
 module Dshow =
     open System.Text.RegularExpressions
@@ -77,16 +80,12 @@ module Dshow =
 
 module Preset =
     module Gdigrab =
-        let small () = """-filter_complex "scale=-2:800:flags=lanczos" -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -movflags +faststart -y """
+        let small = """-filter_complex "scale=-2:800:flags=lanczos" -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -movflags +faststart -y """
 
         let twitch ingestUrl twitchKey =
             $"-c:v libx264 -preset veryfast -maxrate 3000k -bufsize 6000k -pix_fmt yuv420p -g 60 -c:a aac -b:a 128k -f flv {ingestUrl}/{twitchKey}"
 
-let ffmpeg (options: FfmpegOption list) =
+let ffmpeg (options: FfmpegOption list) output =
     let args = options |> List.map toArg |> String.concat " "
 
-    let p = proc "ffmpeg" args
-
-    p <!> Stderr |> consume (slogn [fg Color.Red])
-    p <!> Stdout |> consume logn
-    p |> wait
+    proc "ffmpeg" (args + output)
