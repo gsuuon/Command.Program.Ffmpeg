@@ -43,7 +43,7 @@ let gdigrabOptionToArg  gdigrab =
     | Region region ->
         $"-f gdigrab -framerate {gdigrab.framerate} "
         + $"-offset_x {region.offsetX} -offset_y {region.offsetY} "
-        + $"-video_size {region.width}x{region.height} -show_region 1 "
+        + $"-video_size {region.width}x{region.height} "
         + "-i desktop"
     | Window name ->
         $"-f gdigrab -framerate {gdigrab.framerate} -i title={name}"
