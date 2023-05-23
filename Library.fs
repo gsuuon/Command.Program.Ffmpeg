@@ -32,6 +32,7 @@ type FfmpegOption =
     | Dshow of Dshow
     | Gdigrab of Gdigrab
     | RawArg of string
+    | Nostdin
 
 let dshowOptionToArg =
     function
@@ -53,6 +54,7 @@ let toArg =
     | Dshow dshow -> dshowOptionToArg dshow
     | Gdigrab gdigrab -> gdigrabOptionToArg gdigrab
     | RawArg s -> s
+    | Nostdin -> "-nostdin" // https://stackoverflow.com/a/47114881
 
 module Dshow =
     open System.Text.RegularExpressions
@@ -85,7 +87,10 @@ module Preset =
         let twitch ingestUrl twitchKey =
             $"-c:v libx264 -preset veryfast -maxrate 3000k -bufsize 6000k -pix_fmt yuv420p -g 60 -c:a aac -b:a 128k -f flv {ingestUrl}/{twitchKey}"
 
-let ffmpeg (options: FfmpegOption list) output =
+let ffmpegArgs (options: FfmpegOption list) output =
     let args = options |> List.map toArg |> String.concat " "
 
-    proc "ffmpeg" (args + " " + output)
+    args + " " + output
+
+let ffmpeg (options: FfmpegOption list) output =
+    proc "ffmpeg" (ffmpegArgs options output)
