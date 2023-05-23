@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Gsuuon.Command" Version="0.1.4" PrivateAssets="all" />
-    <PackageReference Include="Gsuuon.Console" Version="0.1.3" PrivateAssets="all" />
+    <PackageReference Include="Gsuuon.Console" Version="0.1.4" PrivateAssets="all" />
     <PackageReference Include="Gsuuon.Command.Utility" Version="0.0.1" PrivateAssets="all" />
   </ItemGroup>
 
