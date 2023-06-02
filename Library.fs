@@ -82,7 +82,7 @@ module Dshow =
 
 module Preset =
     module Gdigrab =
-        let small = """-filter_complex "scale=-2:800:flags=lanczos" -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -movflags +faststart -y """
+        let small = """-filter_complex "scale=-2:800:flags=lanczos" -c:v libx264 -preset medium -crf 26 -pix_fmt yuv420p -movflags +faststart -r 30 -y"""
 
         let twitch ingestUrl twitchKey =
             $"-c:v libx264 -preset veryfast -maxrate 3000k -bufsize 6000k -pix_fmt yuv420p -g 60 -c:a aac -b:a 128k -f flv {ingestUrl}/{twitchKey}"
